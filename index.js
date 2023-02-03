@@ -6,10 +6,8 @@ const app = express();
 
 const { initApyhub, data } = require("apyhub");
 
-// please add your own token 
-// initApyhub("your-token");
-initApyhub("APT0fbmLi30UrF6MeMGo6K339YzmvPtL7kAHgljIFvsU8gfh6sDz");
-
+// please add your own token
+initApyhub("APT0fbmLi30UrF6MeMGo6K339YzmvPtL7kAHgljIFvsU8gfh6sDz")
 const PORT = process.env.PORT || 3001;
 
 const corsOpts = {
@@ -32,16 +30,28 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
+const handleErrorCode = (err) => {
+  if (err.includes(401)) {
+    return 401
+  } else return 400
+}
+
 app.get("/currency-list", async (req, res) => {
-  data.currencyList()
-  .then((resp) => res.send({ list: resp }))
-  .catch((error) => res.status(400).send({ error }))
+  try {
+    const resp = await data.currencyList();
+    res.send({ list: resp })
+  } catch (error) {
+    res.status(handleErrorCode(error.message)).send(error.message);
+  }
 });
 
-app.post("/currency-converter", (req, res) => {
-    data.currencyConverter(req.query)
-    .then((resp) => res.send({ resp }))
-    .catch((error) => res.status(400).send({ error }))
+app.post("/currency-converter", async (req, res) => {
+  try {
+    const resp = await data.currencyConverter(req.query);
+    res.send({ resp });
+  } catch (error) {
+    res.status(handleErrorCode(error.message)).send(error.message);
+  }
 });
 
 app.listen(PORT, () => {
