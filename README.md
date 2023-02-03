@@ -5,7 +5,7 @@
 - do npm install
 - then npm start and your dummy server is up
 
-## mandatory steps 
+## Additional info: 
 - before start: insert your apyhub token in initApyhub("")
 `(generate token: after signing in, go to workspaces settings > applications, and create an application)`
 - add the required SDKs
